@@ -1,41 +1,61 @@
-var express = require('express');
-var graphqlHTTP = require('express-graphql');
-var { buildSchema } = require('graphql');
+let express = require('express');
+let graphqlHTTP = require('express-graphql');
+let { buildSchema } = require('graphql');
 
-var users = [
+let users = [
   {
     id:1,
-    name: 'Brian',
+    name: 'Thomas',
     age: '21',
     gender: 'M'
   },
   {
     id:2,
-    name: 'Kim',
+    name: 'Daniel',
     age: '22',
     gender: 'M'
   },
   {
     id:3,
-    name: 'Joseph',
+    name: 'Julius',
     age: '23',
     gender: 'M'
   },
   {
     id:3,
-    name: 'Faith',
+    name: 'Monisa',
     age: '23',
     gender: 'F'
   },
   {
     id:5,
-    name: 'Joy',
+    name: 'Debo',
+    age: '25',
+    gender: 'F'
+  },
+  {
+    id:6,
+    name: 'Alice',
+    age: '44',
+    gender: 'M'
+  },
+  {
+    id:7,
+    name: 'Fatimo',
     age: '25',
     gender: 'F'
   }
 ]
-
-var schema = buildSchema(`
+/*
+* =====Type Query
+* The exclamation means the ID  must be provided
+* Gender is an optional variable
+* ====Type Person
+* Returns an array of type Person
+* ====Type Mutation
+* Returns an array of type Person
+* */
+let schema = buildSchema(`
   type Query {
     user(id: Int!): Person
     users(gender: String): [Person]
@@ -51,23 +71,23 @@ var schema = buildSchema(`
   }
 `);
 
-var getUser = function(args) {
-  var userID = args.id;
+let getUser = function(args) {
+  let userID = args.id;
   return users.filter(user => {
-    return user.id == userID;
+    return user.id === userID;
   })[0];
 }
 
-var retrieveUsers = function(args) {
+let retrieveUsers = function(args) {
   if(args.gender) {
-    var gender = args.gender;
+    let gender = args.gender;
     return users.filter(user => user.gender === gender);
   } else {
     return users;
   }
 }
 
-var updateUser = function({id, name, age}) {
+let updateUser = function({id, name, age}) {
   users.map(user => {
     if(user.id === id) {
       user.name = name;
@@ -78,13 +98,19 @@ var updateUser = function({id, name, age}) {
   return users.filter(user=> user.id === id) [0];
 }
 
-var root = { 
+
+/*
+*
+* ====Resolver
+* It is responsible for mapping Operation to actual function
+* */
+let root = {
   user: getUser,
   users: retrieveUsers,
   updateUser: updateUser
 };
 
-var app = express();
+let app = express();
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,

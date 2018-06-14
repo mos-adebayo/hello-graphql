@@ -1,10 +1,9 @@
-# GraphQL-Intro
-An Introduction to GraphQL concepts
+# Hello GraphQL
+Basic GraphQL concepts
 
 ### Setup
 
 ```sh
-$ git clone git@github.com:kimobrian/GraphQL-Intro.git
 $ git checkout develop
 $ npm install -g nodemon // Optional
 $ npm i # Alternatively yarn
