@@ -22,7 +22,7 @@ let users = [
     gender: 'M'
   },
   {
-    id:3,
+    id: 4,
     name: 'Monisa',
     age: '23',
     gender: 'F'
@@ -68,6 +68,7 @@ let schema = buildSchema(`
   },
   type Mutation {
     updateUser(id: Int!, name: String!, age: String): Person
+    addUser(name: String!, age: String!, gender: String!): Person
   }
 `);
 
@@ -97,6 +98,11 @@ let updateUser = function({id, name, age}) {
   });
   return users.filter(user=> user.id === id) [0];
 }
+let addUser = function({ name, age, gender}) {
+  const id= users.length + 1;
+  users.push({id: id, name: name, age: age, gender: gender});
+  return [...users].pop();
+}
 
 
 /*
@@ -107,7 +113,8 @@ let updateUser = function({id, name, age}) {
 let root = {
   user: getUser,
   users: retrieveUsers,
-  updateUser: updateUser
+  updateUser: updateUser,
+  addUser: addUser,
 };
 
 let app = express();
@@ -117,3 +124,4 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true,
 }));
 app.listen(4000, () => console.log('Now browse to localhost:4000/graphql'));
+
